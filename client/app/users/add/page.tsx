@@ -6,13 +6,15 @@ import {
   selectIsLoading,
   selectWallet,
 } from "@/features/walletSlice";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import axios from "axios"
 
 const CONTRACT_ID = process.env.NEXT_PUBLIC_CONTRACT_NAME || "";
 
 const styles = {
   formrow: {
     marginBottom: "32px",
+    color: "#fff"
   },
   label: {
     display: "block",
@@ -104,8 +106,11 @@ const styles = {
     marginLeft: "16px",
     justifyContent: "center",
     maxWidth: "200px",
+    cursor: "pointer"
   },
 };
+
+const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:8080"
 
 const Form = () => {
   const wallet = useAppSelector(selectWallet);
@@ -114,6 +119,12 @@ const Form = () => {
   const isLoading = useAppSelector(selectIsLoading);
 
   const [name, setName] = useState<string>("");
+  const [information, setInformation] = useState<{name : string, email : string, phone : string, address: string}>({
+    name: "",
+    email: "",
+    phone: "",
+    address: ""
+  })
 
   useEffect(() => {
     if (!isLoading && wallet) {
@@ -129,19 +140,38 @@ const Form = () => {
     setWalletReady(false);
     e.preventDefault();
 
-    await wallet
-      .callMethod({
-        contractId: CONTRACT_ID,
-        method: "create_user",
-        args: { name },
-        gas: "300000000000000",
-      })
-      .then(() => setWalletReady(true))
-      .then(() => window.location.reload());
+    // await wallet
+    //   .callMethod({
+    //     contractId: CONTRACT_ID,
+    //     method: "create_user",
+    //     args: { name },
+    //     gas: "300000000000000",
+    //   })
+    //   .then(() => setWalletReady(true))
+    //   .then(() => window.location.reload());
+
+    const result = await axios.post(`${webUrl}/api/v1/user/add`, {
+      id : wallet.accountId, 
+      name: information.name, 
+      email: information.email, 
+      phone: information.phone, 
+      address: information.address
+    })
+
+    if(result.data.status) {
+      alert(result.data.message);
+    }else{
+      alert(result.data.message)
+    }
   };
 
-  const handleChange = (setState: any) => (event: any) => {
-    setState(event.target.value);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>, caseInput : Number) => {
+    var typeInput : string = String(e.target.getAttribute("name"))
+
+    setInformation(prev => ({
+      ...prev,
+      [typeInput] : e.target.value
+    }))
   };
 
   return (
@@ -154,9 +184,30 @@ const Form = () => {
             <label>Name</label>
             <input
               style={styles.textbox}
-              name="myInput"
-              value={name}
-              onChange={handleChange(setName)}
+              name="name"
+              value={information.name}
+              onChange={(e) => handleChange(e, 0)}
+            />
+            <label>Phone number</label>
+            <input
+              style={styles.textbox}
+              name="phone"
+              value={information.phone}
+              onChange={(e) => handleChange(e, 1)}
+            />
+            <label>Email</label>
+            <input
+              style={styles.textbox}
+              name="email"
+              value={information.email}
+              onChange={(e) => handleChange(e, 2)}
+            />
+            <label>Address</label>
+            <input
+              style={styles.textbox}
+              name="address"
+              value={information.address}
+              onChange={(e) => handleChange(e, 3)}
             />
           </div>
           <div style={styles.btnrow}>

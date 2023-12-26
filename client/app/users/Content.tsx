@@ -10,12 +10,14 @@ import { useEffect, useState } from "react";
 import { User } from "../@types/User.type";
 import Title from "../components/Title";
 import Link from "next/link";
+import axios from "axios";
 
 const CONTRACT_ID = process.env.NEXT_PUBLIC_CONTRACT_NAME || "";
 
 const styles = {
   formrow: {
     marginBottom: "32px",
+    color: "#fff",
   },
   label: {
     display: "block",
@@ -59,6 +61,8 @@ const styles = {
   },
 };
 
+const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "http://localhost:8080"
+
 const Content = () => {
   const wallet = useAppSelector(selectWallet);
   const account = useAppSelector(selectAccountId);
@@ -76,13 +80,16 @@ const Content = () => {
   useEffect(() => {
     const getData = async () => {
       if (wallet) {
-        const result = await wallet.viewMethod({
-          contractId: CONTRACT_ID,
-          method: "get_all_users",
-        });
-        setUser(result.filter((user: User) => user.user_id === account)[0])
-        setData(result);
-        console.log(result);
+        // const result = await wallet.viewMethod({
+        //   contractId: CONTRACT_ID,
+        //   method: "get_all_users",
+        // });
+        // setUser(result.filter((user: User) => user.user_id === account)[0])
+        // setData(result);
+        // console.log(result);
+
+        const result = await axios.get(`${webUrl}/api/v1/user/${wallet?.accountId}`)
+        setUser(result.data.data)
       }
     };
     getData();
@@ -91,7 +98,7 @@ const Content = () => {
   return (
     <>
       <Title name="Personal Information" />
-      {account !== undefined && !data.map((user) => user.user_id).includes(account) && (
+      {account && !user && (
         <div style={{ textAlign: "center" }}>
           <Link href="/users/add">
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -101,7 +108,7 @@ const Content = () => {
         </div>
       )}
 
-      {account !== undefined && data.map((user) => user.user_id).includes(account) && (
+      {account && user && (
         <>
           <div style={styles.formwrap}>
             <form style={styles.contentdiv}>
@@ -111,6 +118,30 @@ const Content = () => {
                   style={styles.textbox}
                   value={
                     user?.name !== null ? user?.name : ""
+                  }
+                  disabled
+                />
+                <label>Email</label>
+                <input
+                  style={styles.textbox}
+                  value={
+                    user?.email !== null ? user?.email : ""
+                  }
+                  disabled
+                />
+                <label>Phone</label>
+                <input
+                  style={styles.textbox}
+                  value={
+                    user?.phone !== null ? user?.phone : ""
+                  }
+                  disabled
+                />
+                <label>Address</label>
+                <input
+                  style={styles.textbox}
+                  value={
+                    user?.address ? user?.address : ""
                   }
                   disabled
                 />

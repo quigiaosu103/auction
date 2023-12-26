@@ -9,10 +9,10 @@
     "deploy:start": "cd client && rm -rf .env && cd .. && cargo make dev-deploy && cd client && open \"http://localhost:3000\" && pnpm dev"
   },
   "keywords": [
-    "Near",
-    "Eamon",
-    "Dang"
   ],
-  "author": "Dang Quang Vu <eamondang@gmail.com>",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pnpm": "^8.12.1"
+  }
 }

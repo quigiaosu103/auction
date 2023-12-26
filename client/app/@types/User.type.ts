@@ -7,5 +7,6 @@ export interface User {
   email: string | null;
   phone: string | null;
   description: string | null;
+  address: string | null;
   items: Item[];
 }
