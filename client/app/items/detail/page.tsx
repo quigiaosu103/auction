@@ -10,8 +10,10 @@ import {
   selectWallet,
 } from "@/features/walletSlice";
 import { Item } from "@/app/@types/Item.type";
+import { useQRCode } from 'next-qrcode';
 
 const CONTRACT_ID = process.env.NEXT_PUBLIC_CONTRACT_NAME || "";
+const LINK_WEB = process.env.WEBSITE_LINK || "https://locust-amused-openly.ngrok-free.app/";
 
 const Root = styled.div`
   color: black;
@@ -203,6 +205,9 @@ export default function page() {
 
   const id = searchParams.get("id");
 
+  const { SVG } = useQRCode();
+
+
   useEffect(() => {
     if (!isLoading && wallet) {
       setWalletready(true);
@@ -306,6 +311,22 @@ export default function page() {
                 <span>Updated at</span>
                 {item?.updated_at !== undefined && new Date(item?.updated_at).toLocaleString()}
               </MintDetails>
+            </Description>
+            <Description>
+              <h6>QR code</h6>
+              <center>
+                <SVG
+                  text={`${LINK_WEB}/items/detail?id=${id}`}
+                  options={{
+                    margin: 2,
+                    width: 200,
+                    color: {
+                      dark: '#000000',
+                      light: '#FFFFFF',
+                    },
+                  }}
+                />
+              </center>
             </Description>
           </RightSection>
         </TopSection>

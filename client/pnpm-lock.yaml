@@ -89,6 +89,9 @@ dependencies:
   next:
     specifier: 13.2.4
     version: 13.2.4(@babel/core@7.21.3)(react-dom@18.2.0)(react@18.2.0)(sass@1.64.1)
+  next-qrcode:
+    specifier: ^2.5.1
+    version: 2.5.1(react@18.2.0)
   next-router-mock:
     specifier: ^0.9.3
     version: 0.9.3(next@13.2.4)(react@18.2.0)
@@ -6540,6 +6543,16 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /next-qrcode@2.5.1(react@18.2.0):
+    resolution: {integrity: sha512-ibiS1+p+myjurC1obVIgo7UCjFhxm0SNYTkikahQVmnyzlfREOdUCf2f77Vbz6W6q2zfx5Eww2/20vbgkLNdLw==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: '>=17.0.0'
+    dependencies:
+      qrcode: 1.5.3
+      react: 18.2.0
+    dev: false
+
   /next-router-mock@0.9.3(next@13.2.4)(react@18.2.0):
     resolution: {integrity: sha512-jl8eFe71LpMVGeBMpoxILkGfEgGY7IfLy8XPyv05/o61p5oQRNpoMmk46VMxRIpt0fI8XcvznBZKpDK6vbYQcQ==}
     peerDependencies:
@@ -6639,6 +6652,7 @@ packages:
   /node-gyp-build-optional-packages@5.0.7:
     resolution: {integrity: sha512-YlCCc6Wffkx0kHkmam79GKvDQ6x+QZkMjFGrIMxgFNILFvGSbCp2fCBC55pGTT9gVaz8Na5CLmxt/urtzRv36w==}
     hasBin: true
+    requiresBuild: true
     dev: true
     optional: true
 
