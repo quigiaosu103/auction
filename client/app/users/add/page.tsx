@@ -140,16 +140,6 @@ const Form = () => {
     setWalletReady(false);
     e.preventDefault();
 
-    // await wallet
-    //   .callMethod({
-    //     contractId: CONTRACT_ID,
-    //     method: "create_user",
-    //     args: { name },
-    //     gas: "300000000000000",
-    //   })
-    //   .then(() => setWalletReady(true))
-    //   .then(() => window.location.reload());
-
     const result = await axios.post(`${webUrl}/api/v1/user/add`, {
       id : wallet.accountId, 
       name: information.name, 
@@ -163,6 +153,16 @@ const Form = () => {
     }else{
       alert(result.data.message)
     }
+
+    await wallet
+      .callMethod({
+        contractId: CONTRACT_ID,
+        method: "create_user",
+        args: { name },
+        gas: "300000000000000",
+      })
+      .then(() => setWalletReady(true))
+      .then(() => window.location.reload());
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>, caseInput : Number) => {

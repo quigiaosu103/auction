@@ -23,29 +23,45 @@ const Content = () => {
     }, [isLoading, wallet]);
 
     useEffect(() => {
-        if (!account) return;
-        const getData = async () => {
-            await fetch(`${LINK_API}/api/v1/product/all/${account}`)
-                .then(async (response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data: any = await response.json();
+        // if (!account) return;
+        // const getData = async () => {
+        //     await fetch(`${LINK_API}/api/v1/product/all/${account}`)
+        //         .then(async (response) => {
+        //             if (!response.ok) {
+        //                 throw new Error(`HTTP error! Status: ${response.status}`);
+        //             }
+        //             const data: any = await response.json();
 
-                    if (data.data) {
-                        setData(data.data);
-                    }
-                    // Parse the JSON response
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('Data:', data);
-                })
-                .catch((error) => {
-                    console.error('Fetch error:', error);
-                });
-        };
-        getData();
+        //             if (data.data) {
+        //                 setData(data.data);
+        //             }
+        //             // Parse the JSON response
+        //             return response.json();
+        //         })
+        //         .then((data) => {
+        //             console.log('Data:', data);
+        //         })
+        //         .catch((error) => {
+        //             console.error('Fetch error:', error);
+        //         });
+        // };
+        // getData();
+
+        // because we handle in contract so if call api it will not correct
+        const getData = async () => {
+            if (wallet) {
+              const result = await wallet.viewMethod({
+                contractId: CONTRACT_ID,
+                method: "get_all_items_per_user_own",
+                args: {
+                  user_id: account,
+                },
+              });
+              setData(result);
+              console.log(result);
+            }
+          };
+          getData();
     }, [walletReady]);
 
     return (

@@ -119,7 +119,7 @@ export default function ItemList(props: ItemListProps) {
                 if (data?.code == 200) {
                     setCurrentItem(null);
                     setWalletready(true);
-                    window.location.reload();
+                    // window.location.reload();
                 }
 
                 console.log('Data:', data);
@@ -130,6 +130,18 @@ export default function ItemList(props: ItemListProps) {
         };
 
         await deleteProduct();
+        await wallet
+            .callMethod({
+                contractId: CONTRACT_ID,
+                method: "delete_item",
+                args: { item_id: currentItem?.item_id },
+                gas: "300000000000000",
+            })
+            .then(() => setWalletready(true))
+            .then(() => setCurrentItem(null))
+            .then(() => {
+                window.location.reload();
+            });
     };
 
     const startDeleteItem = (id: string) => {
@@ -160,9 +172,9 @@ export default function ItemList(props: ItemListProps) {
             )}
             <Cards>
                 {items.map((item) => (
-                    <Card key={item.id}>
+                    <Card key={item.item_id}>
                         <ImageCard>
-                            <Link href={`/items/detail?id=${item.id}`}>
+                            <Link href={`/items/detail?id=${item.item_id}`}>
                                 <img src={item.media} alt="..." />
                             </Link>
                         </ImageCard>

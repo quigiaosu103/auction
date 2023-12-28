@@ -128,31 +128,47 @@ const FormEdit = () => {
     }, [isLoading, wallet]);
 
     useEffect(() => {
+        // const getData = async () => {
+        //     fetch(`${LINK_API}/api/v1/product/${id}`)
+        //         .then(async (response) => {
+        //             if (!response.ok) {
+        //                 throw new Error(`HTTP error! Status: ${response.status}`);
+        //             }
+        //             const data: any = await response.json();
+        //             if (data.data) {
+        //                 const { name, media, description } = data.data;
+        //                 setName(name);
+        //                 setDescription(description);
+        //                 setMedia(media);
+        //                 setItem(data.data);
+        //             }
+        //             // Parse the JSON response
+        //             return response.json();
+        //         })
+        //         .then((data) => {
+        //             console.log('Data:', data);
+        //         })
+        //         .catch((error) => {
+        //             // Hndle any errors that occurred during the fetch
+        //             console.error('Fetch error:', error);
+        //         });
+        // };
+        // getData();
         const getData = async () => {
-            fetch(`${LINK_API}/api/v1/product/${id}`)
-                .then(async (response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data: any = await response.json();
-                    if (data.data) {
-                        const { name, media, description } = data.data;
-                        setName(name);
-                        setDescription(description);
-                        setMedia(media);
-                        setItem(data.data);
-                    }
-                    // Parse the JSON response
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('Data:', data);
-                })
-                .catch((error) => {
-                    // Hndle any errors that occurred during the fetch
-                    console.error('Fetch error:', error);
+            if (wallet) {
+                const result = await wallet.viewMethod({
+                    contractId: CONTRACT_ID,
+                    method: "get_item_metadata_by_item_id",
+                    args: {
+                        item_id: id,
+                    },
                 });
-        };
+                const { name, media, description } = result;
+                setName(name);
+                setDescription(description);
+                setMedia(media);
+            }
+        }
         getData();
     }, [walletReady]);
 
@@ -190,7 +206,7 @@ const FormEdit = () => {
                     setName(name);
                     setDescription(description);
                     setMedia(media);
-                    window.location.href = window.location.origin + '/items';
+                    // window.location.href = window.location.origin + '/items';
                 }
                 return;
             })
@@ -200,6 +216,16 @@ const FormEdit = () => {
             .catch((error) => {
                 console.error('Fetch error:', error);
             });
+
+        await wallet
+            .callMethod({
+                contractId: CONTRACT_ID,
+                method: "update_item",
+                args: { item_id: id, name, media, description },
+                gas: "300000000000000",
+            })
+            .then(() => setWalletReady(true))
+            .then(() => window.location.reload());
     };
 
     const handleChange = (setState: any) => (event: any) => {

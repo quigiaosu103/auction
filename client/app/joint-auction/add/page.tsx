@@ -125,6 +125,7 @@ const Form = () => {
 
   const [users, setUsers] = useState<User[]>([
     {
+      address: "",
       user_id: "",
       avatar: null,
       description: null,
@@ -195,7 +196,7 @@ const Form = () => {
           users_invited: usersChoose,
           set_item_id: itemsChoose,
           closed_at: unixTimestamp,
-          floor_price: floorPrice,
+          floor_price: parseFloat(floorPrice.toString()),
         },
         gas: "300000000000000",
       })

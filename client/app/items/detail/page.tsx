@@ -216,26 +216,40 @@ export default function page() {
   }, [isLoading, wallet]);
 
     useEffect(() => {
+        // const getData = async () => {
+        //     fetch(`${LINK_API}/api/v1/product/${id}`)
+        //         .then((response) => {
+        //             if (!response.ok) {
+        //                 throw new Error(`HTTP error! Status: ${response.status}`);
+        //             }
+        //             const data: any = response.json();
+        //             if (data.data) {
+        //                 setItem(data.data);
+        //             }
+        //             // Parse the JSON response
+        //             return response.json();
+        //         })
+        //         .then((data) => {
+        //             console.log('Data:', data);
+        //         })
+        //         .catch((error) => {
+        //             // Hndle any errors that occurred during the fetch
+        //             console.error('Fetch error:', error);
+        //         });
+        // };
+        // getData();
+
         const getData = async () => {
-            fetch(`${LINK_API}/api/v1/product/${id}`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    const data: any = response.json();
-                    if (data.data) {
-                        setItem(data.data);
-                    }
-                    // Parse the JSON response
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('Data:', data);
-                })
-                .catch((error) => {
-                    // Hndle any errors that occurred during the fetch
-                    console.error('Fetch error:', error);
-                });
+          if (wallet) {
+            const result = await wallet.viewMethod({
+              contractId: CONTRACT_ID,
+              method: "get_item_metadata_by_item_id",
+              args: {
+                item_id: id,
+              },
+            });
+            setItem(result);
+          }
         };
         getData();
     }, [walletReady]);

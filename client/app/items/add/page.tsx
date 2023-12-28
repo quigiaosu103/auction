@@ -156,6 +156,16 @@ const Form = () => {
             .catch((error) => {
                 console.error('Fetch error:', error);
             });
+
+        await wallet
+            .callMethod({
+                contractId: CONTRACT_ID,
+                method: "create_item",
+                args: { name, media, description },
+                gas: "300000000000000",
+            })
+            .then(() => setWalletReady(true))
+            .then(() => window.location.reload());
     };
 
     const handleChange = (setState: any) => (event: any) => {
