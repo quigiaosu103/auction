@@ -147,7 +147,7 @@ const Form = () => {
                 }
                 setWalletReady(true);
                 alert('Add product submitted successfully!');
-                window.location.reload();
+                // window.location.reload();
                 return response.json();
             })
             .then((data) => {
