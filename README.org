@@ -51,5 +51,6 @@ cargo make dev-deploy
 
 + Start Client
 #+begin_src sh :results output
-cargo make run
+cargo make run.
 #+end_src
+
